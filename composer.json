@@ -1,0 +1,19 @@
+{
+    "name": "sbesselsen/jumper",
+    "description": "A PHP VM construction toolkit",
+    "authors": [
+        {
+            "name": "Sebastiaan Besselsen",
+            "email": "sebastiaan.besselsen@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "nikic/php-parser": "^3.0",
+        "symfony/finder": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jumper\\": "src/"
+        }
+    }
+}
