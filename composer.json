@@ -7,7 +7,7 @@
             "email": "sebastiaan.besselsen@gmail.com"
         }
     ],
-    "require-dev": {
+    "require": {
         "nikic/php-parser": "^3.0",
         "symfony/finder": "^3.2"
     },
