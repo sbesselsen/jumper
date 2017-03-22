@@ -78,6 +78,14 @@ final class ArrayDefinedVM implements VMInterface
                 continue;
             }
 
+            if ($opKey === VMInterface::OP_COMMENT) {
+                if (!isset ($op[0])) {
+                    $op[0] = '';
+                }
+                $output[] = $opIndent . '// ' . implode(PHP_EOL . $opIndent . '// ', explode(PHP_EOL, $op[0]));
+                continue;
+            }
+
             if (!isset ($this->opImplementations[$opKey])) {
                 throw new \InvalidArgumentException("Invalid opcode: {$opKey}");
             }

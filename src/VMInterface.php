@@ -6,6 +6,7 @@ interface VMInterface
     const OP_LABEL = '_label';
     const OP_GOTO = '_goto';
     const OP_GOTO_COND = '_goto_cond';
+    const OP_COMMENT = '_comment';
 
     /**
      * @param array $ops
