@@ -3,6 +3,9 @@ namespace Jumper;
 
 interface VMInterface
 {
+    const OP_LABEL = '_label';
+    const OP_GOTO = '_goto';
+
     /**
      * @param array $ops
      * @param array $args

@@ -22,6 +22,9 @@ final class ArrayDefinedVM implements VMInterface
       $namespace,
       $className
     ) {
+        $labels = [];
+        $gotos = [];
+
         $output = [];
         $output[] = '<' . '?php';
         if ($namespace !== null) {
@@ -38,6 +41,31 @@ final class ArrayDefinedVM implements VMInterface
                 throw new \InvalidArgumentException("Invalid opcode: expected an array");
             }
             $opKey = array_shift($op);
+
+            if ($opKey === VMInterface::OP_LABEL) {
+                if (!isset ($op[0])) {
+                    throw new \InvalidArgumentException("No name specified for label");
+                }
+                if (!preg_match('(^[a-z0-9_]+$)', $op[0])) {
+                    throw new \InvalidArgumentException("Invalid name for label: {$op[0]}");
+                }
+                $labels[$op[0]] = $op[0];
+                $output[] = $opIndent . 'lbl_' . $op[0] . ':';
+                continue;
+            }
+
+            if ($opKey === VMInterface::OP_GOTO) {
+                if (!isset ($op[0])) {
+                    throw new \InvalidArgumentException("No target specified for goto");
+                }
+                if (!preg_match('(^[a-z0-9_]+$)', $op[0])) {
+                    throw new \InvalidArgumentException("Invalid target for goto: {$op[0]}");
+                }
+                $gotos[$op[0]] = $op[0];
+                $output[] = $opIndent . 'goto lbl_' . $op[0] . ';';
+                continue;
+            }
+
             if (!isset ($this->opImplementations[$opKey])) {
                 throw new \InvalidArgumentException("Invalid opcode: {$opKey}");
             }
@@ -50,6 +78,11 @@ final class ArrayDefinedVM implements VMInterface
             }
             $opImplementation = $opIndent . implode(PHP_EOL . $opIndent, explode(PHP_EOL, $opImplementation));
             $output[] = $opImplementation;
+        }
+
+        $missingLabels = array_diff_key($gotos, $labels);
+        if ($missingLabels) {
+            throw new \InvalidArgumentException('Missing labels: ' . implode(', ', $missingLabels));
         }
 
         $output[] = '    }';
