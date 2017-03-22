@@ -66,6 +66,18 @@ final class ArrayDefinedVM implements VMInterface
                 continue;
             }
 
+            if ($opKey === VMInterface::OP_GOTO_COND) {
+                if (!isset ($op[0])) {
+                    throw new \InvalidArgumentException("No target specified for goto");
+                }
+                if (!preg_match('(^[a-z0-9_]+$)', $op[0])) {
+                    throw new \InvalidArgumentException("Invalid target for goto: {$op[0]}");
+                }
+                $gotos[$op[0]] = $op[0];
+                $output[] = $opIndent . 'if ($_reg0) { goto lbl_' . $op[0] . '; }';
+                continue;
+            }
+
             if (!isset ($this->opImplementations[$opKey])) {
                 throw new \InvalidArgumentException("Invalid opcode: {$opKey}");
             }
